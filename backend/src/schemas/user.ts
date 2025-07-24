@@ -1,8 +1,9 @@
 import { z } from 'zod/v4';
+import { Types } from 'mongoose';
 
 const dbEntrySchema = z.strictObject({
-  _id: z.string(),
-  createdAt: z.string()
+  _id: z.instanceof(Types.ObjectId),
+  createdAt: z.date()
 });
 
 const userSchema = z.strictObject({

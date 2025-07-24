@@ -17,7 +17,7 @@ Currently this fullstack application allows a user to update their profile, but 
 ## Getting started - Backend
 
 1. Once you have cloned the repo, into the `backend` directory and run `npm i` to install the dependencies
-2. Rename `.example.env` to `.env` and add your MongoDB connection string from Mongo Compass
+2. Create a `.env.development.local` file with a `MONGO_URI` variable with your connection string
 3. Run `npm run dev` to start the development server
 4. Take some time to familiarize yourself with the app, and test the endpoints
 
