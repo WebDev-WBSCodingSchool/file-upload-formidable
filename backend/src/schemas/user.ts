@@ -1,15 +1,22 @@
 import { z } from 'zod/v4';
 import { Types } from 'mongoose';
 
+const convertString = (val: string | [string]) => {
+  if (Array.isArray(val)) {
+    return val[0];
+  }
+  return val;
+};
+
 const dbEntrySchema = z.strictObject({
   _id: z.instanceof(Types.ObjectId),
   createdAt: z.date()
 });
 
 const userSchema = z.strictObject({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  email: z.email('Invalid email.'),
+  firstName: z.preprocess(convertString, z.string().min(1, 'First name is required')),
+  lastName: z.preprocess(convertString, z.string().min(1, 'Last name is required')),
+  email: z.preprocess(convertString, z.email('Invalid email.')),
   image: z
     .url({
       protocol: /^https?$/,

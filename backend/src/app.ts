@@ -3,6 +3,8 @@ import cors from 'cors';
 import '#db';
 import { userRouter } from '#routes';
 import { errorHandler, notFoundHandler } from '#middlewares';
+import { formidable } from 'formidable';
+
 const app = express();
 const port = process.env.PORT || 3000;
 

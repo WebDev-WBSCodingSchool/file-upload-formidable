@@ -40,6 +40,7 @@ export const updateUser: RequestHandler<{ id: string }, UserDTO, UserInputDTO> =
     params: { id },
     body
   } = req;
+  console.log('body,', body);
   if (!isValidObjectId(id)) throw new Error('Invalid id', { cause: { status: 400 } });
   const user = await User.findByIdAndUpdate(id, body, { new: true }).lean();
   if (!user) throw new Error('User not found', { cause: { status: 404 } });
