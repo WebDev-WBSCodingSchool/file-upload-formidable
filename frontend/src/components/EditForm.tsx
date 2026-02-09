@@ -3,6 +3,8 @@ import { toast } from 'react-hot-toast';
 import { getUserById, updateUser } from '../data/users.ts';
 import Preview from './Preview.tsx';
 
+const userId = '6988813939c6d81f92c30866';
+
 const EditForm = () => {
   const [imagePreview, setImagePreview] = useState('');
   const [loading, setLoading] = useState(false);
@@ -10,14 +12,14 @@ const EditForm = () => {
     firstName: '',
     lastName: '',
     email: '',
-    image: ''
+    image: null
   });
 
   useEffect(() => {
     let ignore = false;
     (async () => {
       try {
-        const userData = await getUserById('686676f800df04974a77c9df');
+        const userData = await getUserById(userId);
         if (!ignore) {
           const { firstName, lastName, email, image } = userData;
           setForm({ firstName, lastName, email, image });
@@ -38,20 +40,25 @@ const EditForm = () => {
   }, []);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.name === 'image') {
-      setImagePreview(e.target.value);
+    const imageFile = e.target.files;
+    if (e.target.name === 'image' && imageFile) {
+      setImagePreview(URL.createObjectURL(imageFile[0]));
     }
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm(prev =>
+      e.target.type === 'file' && imageFile
+        ? { ...prev, [e.target.name]: imageFile[0] }
+        : { ...prev, [e.target.name]: e.target.value }
+    );
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       setLoading(true);
-
+      const formData = new FormData(e.target as HTMLFormElement);
       const { firstName, lastName, email, image } = await updateUser({
-        id: '686676f800df04974a77c9df',
-        formData: form
+        id: userId,
+        formData
       });
 
       setImagePreview(image);
@@ -106,6 +113,7 @@ const EditForm = () => {
           />
         </label>
 
+        {/* 
         <label className="input input-bordered flex items-center gap-2 w-full">
           Image:
           <input
@@ -115,7 +123,9 @@ const EditForm = () => {
             name="image"
             className="grow"
           />
-        </label>
+        </label> */}
+
+        <input onChange={handleChange} type="file" name="image" className="file-input w-full" />
 
         <button type="submit" className="btn btn-block" disabled={loading}>
           Upload
