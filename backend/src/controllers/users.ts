@@ -9,6 +9,9 @@ type UserDTO = UserInputDTO & {
   _id: InstanceType<typeof Types.ObjectId>;
   createdAt: Date;
 };
+type IdParams = {
+  id: string;
+};
 
 export const getUsers: RequestHandler<unknown, UserDTO[]> = async (req, res) => {
   const users = await User.find().lean();
@@ -21,11 +24,11 @@ export const createUser: RequestHandler<unknown, UserDTO, UserInputDTO> = async 
   } = req;
   const found = await User.findOne({ email });
   if (found) throw new Error('Email already exists', { cause: { status: 400 } });
-  const user = await User.create<UserInputDTO>(req.body);
+  const user = await User.create(req.body satisfies UserInputDTO);
   res.status(201).json(user);
 };
 
-export const getUserById: RequestHandler<{ id: string }, UserDTO> = async (req, res) => {
+export const getUserById: RequestHandler<IdParams, UserDTO> = async (req, res) => {
   const {
     params: { id }
   } = req;
@@ -35,10 +38,7 @@ export const getUserById: RequestHandler<{ id: string }, UserDTO> = async (req, 
   res.json(user);
 };
 
-export const updateUser: RequestHandler<{ id: string }, UserDTO, UserInputDTO> = async (
-  req,
-  res
-) => {
+export const updateUser: RequestHandler<IdParams, UserDTO, UserInputDTO> = async (req, res) => {
   const {
     params: { id },
     body
@@ -49,7 +49,7 @@ export const updateUser: RequestHandler<{ id: string }, UserDTO, UserInputDTO> =
   res.json(user);
 };
 
-export const deleteUser: RequestHandler<{ id: string }, { message: string }> = async (req, res) => {
+export const deleteUser: RequestHandler<IdParams, { message: string }> = async (req, res) => {
   const {
     params: { id }
   } = req;
