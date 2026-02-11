@@ -1,11 +1,14 @@
 import type { RequestHandler } from 'express';
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, type Types } from 'mongoose';
 import type { z } from 'zod/v4';
 import { User } from '#models';
-import type { userSchema, userDbSchema } from '#schemas';
+import type { userSchema } from '#schemas';
 
 type UserInputDTO = z.input<typeof userSchema>;
-type UserDTO = z.infer<typeof userDbSchema>;
+type UserDTO = UserInputDTO & {
+  _id: InstanceType<typeof Types.ObjectId>;
+  createdAt: Date;
+};
 
 export const getUsers: RequestHandler<unknown, UserDTO[]> = async (req, res) => {
   const users = await User.find().lean();

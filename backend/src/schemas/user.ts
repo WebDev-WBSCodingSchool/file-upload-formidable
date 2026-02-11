@@ -1,10 +1,4 @@
 import { z } from 'zod/v4';
-import { Types } from 'mongoose';
-
-const dbEntrySchema = z.strictObject({
-  _id: z.instanceof(Types.ObjectId),
-  createdAt: z.date()
-});
 
 const userSchema = z.strictObject({
   firstName: z.string().min(1, 'First name is required'),
@@ -20,9 +14,4 @@ const userSchema = z.strictObject({
     )
 });
 
-const userDbSchema = z.strictObject({
-  ...dbEntrySchema.shape,
-  ...userSchema.shape
-});
-
-export { userSchema, userDbSchema };
+export { userSchema };

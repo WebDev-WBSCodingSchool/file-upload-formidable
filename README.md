@@ -46,14 +46,14 @@ Currently this fullstack application allows a user to update their profile, but 
   - Throw an error if no `file` property is found on the request object
 - Add the resulting `secure_url` as an `image` property on the `body`
 
-Your resulting `userRouter` could look something like this in the end
+Your resulting `userRoutes` could look something like this in the end
 
 ```js
-userRouter
-  .route('/:id')
-  .get(getUserById)
-  .put(formMiddleWare, cloudUploader, validateBodyZod(userSchema), updateUser)
-  .delete(deleteUser);
+userRoutes
+	.route('/:id')
+	.get(getUserById)
+	.put(formMiddleWare, cloudUploader, validateBody(userSchema), updateUser)
+	.delete(deleteUser);
 ```
 
 - Test your endpoint via Postman (make sure to select `form-data` instead of `raw JSON` once you start using formidable)
