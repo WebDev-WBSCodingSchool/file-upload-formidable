@@ -7,14 +7,10 @@ const userSchema = new Schema(
     email: { type: String, required: [true, 'Email is required'], unique: true },
     image: {
       type: String,
-      required: [true, 'Image is required'],
-      default:
-        'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'
+      required: [true, 'Image is required']
     }
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );
 
-const User = model('User', userSchema);
-
-export default User;
+export default model('User', userSchema);

@@ -1,18 +1,19 @@
-import type { ErrorRequestHandler } from 'express';
+import { type ErrorRequestHandler } from 'express';
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  process.env.NODE_ENV !== 'production' && console.error(err.stack);
+  process.env.NODE_ENV !== 'production' && console.log(`\x1b[31m${err.stack}\x1b[0m`);
+
+  let errorMessage = 'Internal server error';
+  let statusCode = 500;
+
   if (err instanceof Error) {
-    if (err.cause) {
-      const cause = err.cause as { status: number };
-      res.status(cause.status).json({ message: err.message });
-      return;
+    // check if cause property exists, is an object, and has a 'status' property
+    if (err.cause && typeof err.cause === 'object' && 'status' in err.cause) {
+      statusCode = err.cause.status as number;
     }
-    res.status(500).json({ message: err.message });
-    return;
+    errorMessage = err.message;
   }
-  res.status(500).json({ message: 'Internal server error' });
-  return;
+  res.status(statusCode).json({ error: errorMessage });
 };
 
 export default errorHandler;
